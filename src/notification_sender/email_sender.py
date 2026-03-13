@@ -148,11 +148,10 @@ class EmailSender:
             html_content = markdown_to_html_document(content)
             html_content = _sanitize_for_smtp(html_content)
             
-            # 构建邮件（policy.SMTPUTF8 支持 UTF-8 避免 ASCII 编码错误）
-            msg = MIMEMultipart('alternative', policy=policy.SMTPUTF8)
+            # 构建邮件（仅 sanitization 处理 NBSP 等，避免 ASCII 编码错误）
+            msg = MIMEMultipart('alternative')
             msg['Subject'] = Header(subject, 'utf-8')
-            sender_name = _sanitize_for_smtp(self._email_config.get('sender_name', '股票分析助手'))
-            msg['From'] = formataddr((sender_name, sender))
+            msg['From'] = formataddr((_sanitize_for_smtp(self._email_config.get('sender_name', '股票分析助手')), sender))
             msg['To'] = ', '.join(receivers)
             
             # 添加纯文本和 HTML 两个版本
@@ -215,10 +214,9 @@ class EmailSender:
         try:
             date_str = datetime.now().strftime('%Y-%m-%d')
             subject = _sanitize_for_smtp(f"📈 股票智能分析报告 - {date_str}")
-            msg = MIMEMultipart('related', policy=policy.SMTPUTF8)
+            msg = MIMEMultipart('related')
             msg['Subject'] = Header(subject, 'utf-8')
-            sender_name = _sanitize_for_smtp(self._email_config.get('sender_name', '股票分析助手'))
-            msg['From'] = formataddr((sender_name, sender))
+            msg['From'] = formataddr((_sanitize_for_smtp(self._email_config.get('sender_name', '股票分析助手')), sender))
             msg['To'] = ', '.join(receivers)
 
             alt = MIMEMultipart('alternative')
