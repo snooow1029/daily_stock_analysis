@@ -46,6 +46,7 @@ DEFAULT_QUIET_LOGGERS = [
     'sqlalchemy',
     'google',
     'httpx',
+    'httpcore',  # 降低日誌級別，避免關閉時觸發 RotatingFileHandler 的 shutdown 競態
 ]
 
 
