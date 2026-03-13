@@ -30,8 +30,9 @@ SMTP_CONFIGS = {
     # 网易邮箱
     "163.com": {"server": "smtp.163.com", "port": 465, "ssl": True},
     "126.com": {"server": "smtp.126.com", "port": 465, "ssl": True},
-    # Gmail
+    # Gmail（支持 gmail.com 与 googlemail.com）
     "gmail.com": {"server": "smtp.gmail.com", "port": 587, "ssl": False},
+    "googlemail.com": {"server": "smtp.gmail.com", "port": 587, "ssl": False},
     # Outlook
     "outlook.com": {"server": "smtp-mail.outlook.com", "port": 587, "ssl": False},
     "hotmail.com": {"server": "smtp-mail.outlook.com", "port": 587, "ssl": False},
@@ -148,8 +149,8 @@ class EmailSender:
             msg.attach(text_part)
             msg.attach(html_part)
             
-            # 自动识别 SMTP 配置
-            domain = sender.split('@')[-1].lower()
+            # 自动识别 SMTP 配置（strip 去除 Secrets 可能带入的空白/换行）
+            domain = (sender or "").split('@')[-1].lower().strip()
             smtp_config = SMTP_CONFIGS.get(domain)
             
             if smtp_config:
@@ -223,7 +224,7 @@ class EmailSender:
             img_part.add_header('Content-ID', '<report-image>')
             msg.attach(img_part)
 
-            domain = sender.split('@')[-1].lower()
+            domain = (sender or "").split('@')[-1].lower().strip()
             smtp_config = SMTP_CONFIGS.get(domain)
             if smtp_config:
                 smtp_server, smtp_port = smtp_config['server'], smtp_config['port']
