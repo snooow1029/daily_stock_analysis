@@ -92,6 +92,7 @@ STOCK_NAME_MAP = {
     "CRWV": "CoreWeave",
     "GLW": "Corning",
     "AVGO": "Broadcom",
+    "ONDS": "Ondas Holdings",
     # === HK stocks (5-digit) ===
     "00700": "腾讯控股",
     "03690": "美团",
