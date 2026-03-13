@@ -1396,7 +1396,7 @@ class GeminiAnalyzer:
                     buy_reason=data.get('buy_reason', ''),
                     # 元数据
                     search_performed=data.get('search_performed', False),
-                    data_sources=data.get('data_sources', '技术面数据'),
+                    data_sources=data.get('data_sources', '技術面數據'),
                     success=True,
                 )
             else:

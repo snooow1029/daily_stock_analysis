@@ -608,14 +608,14 @@ class HistoryService:
             chip_data = data_persp.get('chip_structure', {})
 
             report_lines.extend([
-                "### 📊 数据透视",
+                "### 📊 數據透視",
                 "",
             ])
             # 趋势状态
             if trend_data:
                 is_bullish = "✅ 是" if trend_data.get('is_bullish', False) else "❌ 否"
                 report_lines.extend([
-                    f"**均线排列**: {trend_data.get('ma_alignment', 'N/A')} | 多头排列: {is_bullish} | 趋势强度: {trend_data.get('trend_score', 'N/A')}/100",
+                    f"**均線排列**: {trend_data.get('ma_alignment', 'N/A')} | 多頭排列: {is_bullish} | 趨勢強度: {trend_data.get('trend_score', 'N/A')}/100",
                     "",
                 ])
             # 价格位置
@@ -623,9 +623,9 @@ class HistoryService:
                 bias_status = price_data.get('bias_status', 'N/A')
                 bias_emoji = "✅" if bias_status == "安全" else ("⚠️" if bias_status == "警戒" else "🚨")
                 report_lines.extend([
-                    "| 价格指标 | 数值 |",
+                    "| 價格指標 | 數值 |",
                     "|---------|------|",
-                    f"| 当前价 | {price_data.get('current_price', 'N/A')} |",
+                    f"| 當前價 | {price_data.get('current_price', 'N/A')} |",
                     f"| MA5 | {price_data.get('ma5', 'N/A')} |",
                     f"| MA10 | {price_data.get('ma10', 'N/A')} |",
                     f"| MA20 | {price_data.get('ma20', 'N/A')} |",
@@ -637,7 +637,7 @@ class HistoryService:
             # 量能分析
             if vol_data:
                 report_lines.extend([
-                    f"**量能**: 量比 {vol_data.get('volume_ratio', 'N/A')} ({vol_data.get('volume_status', '')}) | 换手率 {vol_data.get('turnover_rate', 'N/A')}%",
+                    f"**量能**: 量比 {vol_data.get('volume_ratio', 'N/A')} ({vol_data.get('volume_status', '')}) | 換手率 {vol_data.get('turnover_rate', 'N/A')}%",
                     f"💡 *{vol_data.get('volume_meaning', '')}*",
                     "",
                 ])
@@ -654,7 +654,7 @@ class HistoryService:
         battle = dashboard.get('battle_plan', {}) if dashboard else {}
         if battle:
             report_lines.extend([
-                "### 🎯 作战计划",
+                "### 🎯 作戰計劃",
                 "",
             ])
             # 狙击点位
@@ -675,9 +675,9 @@ class HistoryService:
             position = battle.get('position_strategy', {})
             if position:
                 report_lines.extend([
-                    f"**💰 仓位建议**: {position.get('suggested_position', 'N/A')}",
-                    f"- 建仓策略: {position.get('entry_plan', 'N/A')}",
-                    f"- 风控策略: {position.get('risk_control', 'N/A')}",
+                    f"**💰 倉位建議**: {position.get('suggested_position', 'N/A')}",
+                    f"- 建倉策略: {position.get('entry_plan', 'N/A')}",
+                    f"- 風控策略: {position.get('risk_control', 'N/A')}",
                     "",
                 ])
             # 检查清单
@@ -702,7 +702,7 @@ class HistoryService:
             # 风险提示
             if result.risk_warning:
                 report_lines.extend([
-                    f"**⚠️ 风险提示**: {result.risk_warning}",
+                    f"**⚠️ 風險提示**: {result.risk_warning}",
                     "",
                 ])
             # 技术面分析
@@ -712,7 +712,7 @@ class HistoryService:
                     "",
                 ])
                 if result.ma_analysis:
-                    report_lines.append(f"**均线**: {result.ma_analysis}")
+                    report_lines.append(f"**均線**: {result.ma_analysis}")
                 if result.volume_analysis:
                     report_lines.append(f"**量能**: {result.volume_analysis}")
                 report_lines.append("")

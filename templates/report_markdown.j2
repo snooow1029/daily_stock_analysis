@@ -1,12 +1,12 @@
 {% from '_macros.j2' import market_snapshot %}
-# 🎯 {{ report_date }} 决策仪表盘
+# 🎯 {{ report_date }} 決策儀表盤
 
-> 共分析 **{{ results|length }}** 只股票 | 🟢买入:{{ buy_count }} 🟡观望:{{ hold_count }} 🔴卖出:{{ sell_count }}
+> 共分析 **{{ results|length }}** 只股票 | 🟢買入:{{ buy_count }} 🟡觀望:{{ hold_count }} 🔴賣出:{{ sell_count }}
 
-## 📊 分析结果摘要
+## 📊 分析結果摘要
 
 {% for e in enriched %}
-{{ e.signal_emoji }} **{{ e.stock_name }}({{ e.result.code }})**: {{ e.result.operation_advice }} | 评分 {{ e.result.sentiment_score }} | {{ e.result.trend_prediction }}
+{{ e.signal_emoji }} **{{ e.stock_name }}({{ e.result.code }})**: {{ e.result.operation_advice }} | 評分 {{ e.result.sentiment_score }} | {{ e.result.trend_prediction }}
 {% endfor %}
 
 ---
@@ -22,17 +22,17 @@
 ## {{ e.signal_emoji }} {{ e.stock_name }} ({{ result.code }})
 
 {% if intel %}
-### 📰 重要信息速览
+### 📰 重要資訊速覽
 
 {% if intel.get('sentiment_summary') %}
 **💭 舆情情绪**: {{ intel.sentiment_summary }}
 {% endif %}
 {% if intel.get('earnings_outlook') %}
-**📊 业绩预期**: {{ intel.earnings_outlook }}
+**📊 業績預期**: {{ intel.earnings_outlook }}
 {% endif %}
 {% if intel.get('risk_alerts') %}
 
-**🚨 风险警报**:
+**🚨 風險警報**:
 {% for alert in intel.risk_alerts %}
 - {{ alert }}
 {% endfor %}
@@ -46,7 +46,7 @@
 {% endif %}
 {% if intel.get('latest_news') %}
 
-**📢 最新动态**: {{ intel.latest_news }}
+**📢 最新動態**: {{ intel.latest_news }}
 {% endif %}
 
 {% endif %}
@@ -70,11 +70,11 @@
 {{ market_snapshot(result) }}
 
 {% if data_persp %}
-### 📊 数据透视
+### 📊 數據透視
 
 {% set trend_data = data_persp.get('trend_status', {}) %}
 {% if trend_data %}
-**均线排列**: {{ trend_data.get('ma_alignment', 'N/A') }} | 多头排列: {{ '✅ 是' if trend_data.get('is_bullish') else '❌ 否' }} | 趋势强度: {{ trend_data.get('trend_score', 'N/A') }}/100
+**均線排列**: {{ trend_data.get('ma_alignment', 'N/A') }} | 多頭排列: {{ '✅ 是' if trend_data.get('is_bullish') else '❌ 否' }} | 趨勢強度: {{ trend_data.get('trend_score', 'N/A') }}/100
 {% endif %}
 
 {% set price_data = data_persp.get('price_position', {}) %}
@@ -85,9 +85,9 @@
 | MA5 | {{ price_data.get('ma5', 'N/A') }} |
 | MA10 | {{ price_data.get('ma10', 'N/A') }} |
 | MA20 | {{ price_data.get('ma20', 'N/A') }} |
-| 乖离率(MA5) | {{ price_data.get('bias_ma5', 'N/A') }}% {{ price_data.get('bias_status', 'N/A') }} |
-| 支撑位 | {{ price_data.get('support_level', 'N/A') }} |
-| 压力位 | {{ price_data.get('resistance_level', 'N/A') }} |
+| 乖離率(MA5) | {{ price_data.get('bias_ma5', 'N/A') }}% {{ price_data.get('bias_status', 'N/A') }} |
+| 支撐位 | {{ price_data.get('support_level', 'N/A') }} |
+| 壓力位 | {{ price_data.get('resistance_level', 'N/A') }} |
 {% endif %}
 
 {% set vol_data = data_persp.get('volume_analysis', {}) %}
@@ -98,30 +98,30 @@
 
 {% set chip_data = data_persp.get('chip_structure', {}) %}
 {% if chip_data %}
-**筹码**: 获利比例 {{ chip_data.get('profit_ratio', 'N/A') }} | 平均成本 {{ chip_data.get('avg_cost', 'N/A') }} | 集中度 {{ chip_data.get('concentration', 'N/A') }} {{ chip_data.get('chip_health', 'N/A') }}
+**籌碼**: 獲利比例 {{ chip_data.get('profit_ratio', 'N/A') }} | 平均成本 {{ chip_data.get('avg_cost', 'N/A') }} | 集中度 {{ chip_data.get('concentration', 'N/A') }} {{ chip_data.get('chip_health', 'N/A') }}
 {% endif %}
 {% endif %}
 
 {% if battle %}
-### 🎯 作战计划
+### 🎯 作戰計劃
 
 {% set sniper = battle.get('sniper_points', {}) %}
 {% if sniper %}
-**📍 狙击点位**
+**📍 狙擊點位**
 
-| 点位类型 | 价格 |
+| 點位類型 | 價格 |
 |---------|------|
-| 🎯 理想买入点 | {{ clean_sniper(sniper.get('ideal_buy')) }} |
-| 🔵 次优买入点 | {{ clean_sniper(sniper.get('secondary_buy')) }} |
-| 🛑 止损位 | {{ clean_sniper(sniper.get('stop_loss')) }} |
-| 🎊 目标位 | {{ clean_sniper(sniper.get('take_profit')) }} |
+| 🎯 理想買入點 | {{ clean_sniper(sniper.get('ideal_buy')) }} |
+| 🔵 次優買入點 | {{ clean_sniper(sniper.get('secondary_buy')) }} |
+| 🛑 止損位 | {{ clean_sniper(sniper.get('stop_loss')) }} |
+| 🎊 目標位 | {{ clean_sniper(sniper.get('take_profit')) }} |
 {% endif %}
 
 {% set position = battle.get('position_strategy', {}) %}
 {% if position %}
-**💰 仓位建议**: {{ position.get('suggested_position', 'N/A') }}
-- 建仓策略: {{ position.get('entry_plan', 'N/A') }}
-- 风控策略: {{ position.get('risk_control', 'N/A') }}
+**💰 倉位建議**: {{ position.get('suggested_position', 'N/A') }}
+- 建倉策略: {{ position.get('entry_plan', 'N/A') }}
+- 風控策略: {{ position.get('risk_control', 'N/A') }}
 {% endif %}
 
 {% set checklist = battle.get('action_checklist', []) %}
@@ -138,7 +138,7 @@
 **💡 操作理由**: {{ result.buy_reason }}
 {% endif %}
 {% if result.risk_warning %}
-**⚠️ 风险提示**: {{ result.risk_warning }}
+**⚠️ 風險提示**: {{ result.risk_warning }}
 {% endif %}
 {% endif %}
 
@@ -156,4 +156,4 @@
 {% endfor %}
 {% endif %}
 
-*报告生成时间：{{ report_timestamp }}*
+*報告生成時間：{{ report_timestamp }}*
