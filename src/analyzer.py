@@ -376,14 +376,14 @@ class AnalysisResult:
     def get_emoji(self) -> str:
         """根据操作建议返回对应 emoji"""
         emoji_map = {
-            '买入': '🟢',
-            '加仓': '🟢',
-            '强烈买入': '💚',
+            '买入': '🟢', '買入': '🟢',
+            '加仓': '🟢', '加倉': '🟢',
+            '强烈买入': '💚', '強烈買入': '💚',
             '持有': '🟡',
-            '观望': '⚪',
-            '减仓': '🟠',
-            '卖出': '🔴',
-            '强烈卖出': '❌',
+            '观望': '⚪', '觀望': '⚪',
+            '减仓': '🟠', '減倉': '🟠',
+            '卖出': '🔴', '賣出': '🔴',
+            '强烈卖出': '❌', '強烈賣出': '❌',
         }
         advice = self.operation_advice or ''
         # Direct match first
@@ -437,6 +437,8 @@ class GeminiAnalyzer:
     # ========================================
 
     SYSTEM_PROMPT = """你是一位專注於趨勢交易的 A 股投資分析師，負責生成專業的【決策儀表盤】分析報告。
+
+【重要】請使用繁體中文輸出所有內容，包括 JSON 中的文字描述、分析摘要、風險提示等，切勿使用簡體字。
 
 ## 核心交易理念（必須嚴格遵守）
 
@@ -494,7 +496,7 @@ class GeminiAnalyzer:
 
     "dashboard": {
         "core_conclusion": {
-            "one_sentence": "一句话核心结论（30字以内，直接告诉用户做什么）",
+            "one_sentence": "一句話核心結論（30字以內，直接告訴用戶做什麼）",
             "signal_type": "🟢買入信號/🟡持有觀望/🔴賣出信號/⚠️風險警告",
             "time_sensitivity": "立即行動/今日內/本週內/不急",
             "position_advice": {
@@ -520,10 +522,10 @@ class GeminiAnalyzer:
                 "resistance_level": 壓力位價格
             },
             "volume_analysis": {
-                "volume_ratio": 量比数值,
-                "volume_status": "放量/缩量/平量",
-                "turnover_rate": 换手率百分比,
-                "volume_meaning": "量能含义解读（如：缩量回调表示抛压减轻）"
+                "volume_ratio": 量比數值,
+                "volume_status": "放量/縮量/平量",
+                "turnover_rate": 換手率百分比,
+                "volume_meaning": "量能含義解讀（如：縮量回調表示拋壓減輕）"
             },
             "chip_structure": {
                 "profit_ratio": 獲利比例,
@@ -588,7 +590,7 @@ class GeminiAnalyzer:
 }
 ```
 
-## 评分标准
+## 評分標準
 
 ### 強烈買入（80-100分）：
 - ✅ 多頭排列：MA5 > MA10 > MA20
@@ -1134,7 +1136,7 @@ class GeminiAnalyzer:
 
 ## ✅ 分析任務
 
-請為 **{stock_name}({code})** 生成【決策儀表盤】，嚴格按照 JSON 格式輸出。
+請為 **{stock_name}({code})** 生成【決策儀表盤】，嚴格按照 JSON 格式輸出。**請使用繁體中文**，勿使用簡體字。
 """
         if context.get('is_index_etf'):
             prompt += """
@@ -1352,9 +1354,9 @@ class GeminiAnalyzer:
                 decision_type = data.get('decision_type', '')
                 if not decision_type:
                     op = data.get('operation_advice', '持有')
-                    if op in ['买入', '加仓', '强烈买入']:
+                    if op in ['买入', '加仓', '强烈买入', '買入', '加倉', '強烈買入']:
                         decision_type = 'buy'
-                    elif op in ['卖出', '减仓', '强烈卖出']:
+                    elif op in ['卖出', '减仓', '强烈卖出', '賣出', '減倉', '強烈賣出']:
                         decision_type = 'sell'
                     else:
                         decision_type = 'hold'
@@ -1441,8 +1443,8 @@ class GeminiAnalyzer:
         text_lower = response_text.lower()
         
         # 简单的情绪识别
-        positive_keywords = ['看多', '买入', '上涨', '突破', '强势', '利好', '加仓', 'bullish', 'buy']
-        negative_keywords = ['看空', '卖出', '下跌', '跌破', '弱势', '利空', '减仓', 'bearish', 'sell']
+        positive_keywords = ['看多', '买入', '買入', '上涨', '上漲', '突破', '强势', '強勢', '利好', '加仓', '加倉', 'bullish', 'buy']
+        negative_keywords = ['看空', '卖出', '賣出', '下跌', '跌破', '弱势', '弱勢', '利空', '减仓', '減倉', 'bearish', 'sell']
         
         positive_count = sum(1 for kw in positive_keywords if kw in text_lower)
         negative_count = sum(1 for kw in negative_keywords if kw in text_lower)

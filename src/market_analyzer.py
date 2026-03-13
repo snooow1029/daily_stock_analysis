@@ -534,6 +534,8 @@ Output the report content directly, no extra commentary.
         # A 股場景使用中文提示語
         return f"""你是一位專業的A/H/美股市場分析師，請根據以下數據生成一份簡潔的大盤覆盤報告。
 
+【重要】請使用繁體中文輸出所有內容，切勿使用簡體字。
+
 【重要】輸出要求：
 - 必須輸出純 Markdown 文字格式
 - 禁止輸出 JSON 格式
