@@ -13,6 +13,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 from email.header import Header
 from email.utils import formataddr
+from email import policy
 import smtplib
 
 from src.config import Config
@@ -20,6 +21,13 @@ from src.formatters import markdown_to_html_document
 
 
 logger = logging.getLogger(__name__)
+
+
+def _sanitize_for_smtp(text: str) -> str:
+    """Replace chars that cause ASCII encode errors (e.g. NBSP \\xa0 from AI/copy-paste)."""
+    if not text:
+        return text
+    return text.replace('\xa0', ' ').replace('\u200b', '')  # NBSP, zero-width space
 
 
 # SMTP 服务器配置（自动识别）
@@ -133,14 +141,18 @@ class EmailSender:
             if subject is None:
                 date_str = datetime.now().strftime('%Y-%m-%d')
                 subject = f"📈 股票智能分析报告 - {date_str}"
-            
+            subject = _sanitize_for_smtp(subject)
+            content = _sanitize_for_smtp(content)
+
             # 将 Markdown 转换为简单 HTML
             html_content = markdown_to_html_document(content)
+            html_content = _sanitize_for_smtp(html_content)
             
-            # 构建邮件
-            msg = MIMEMultipart('alternative')
+            # 构建邮件（policy.SMTPUTF8 支持 UTF-8 避免 ASCII 编码错误）
+            msg = MIMEMultipart('alternative', policy=policy.SMTPUTF8)
             msg['Subject'] = Header(subject, 'utf-8')
-            msg['From'] = formataddr((self._email_config.get('sender_name', '股票分析助手'), sender))
+            sender_name = _sanitize_for_smtp(self._email_config.get('sender_name', '股票分析助手'))
+            msg['From'] = formataddr((sender_name, sender))
             msg['To'] = ', '.join(receivers)
             
             # 添加纯文本和 HTML 两个版本
@@ -202,12 +214,11 @@ class EmailSender:
         receivers = receivers or self._email_config['receivers']
         try:
             date_str = datetime.now().strftime('%Y-%m-%d')
-            subject = f"📈 股票智能分析报告 - {date_str}"
-            msg = MIMEMultipart('related')
+            subject = _sanitize_for_smtp(f"📈 股票智能分析报告 - {date_str}")
+            msg = MIMEMultipart('related', policy=policy.SMTPUTF8)
             msg['Subject'] = Header(subject, 'utf-8')
-            msg['From'] = formataddr(
-                (self._email_config.get('sender_name', '股票分析助手'), sender)
-            )
+            sender_name = _sanitize_for_smtp(self._email_config.get('sender_name', '股票分析助手'))
+            msg['From'] = formataddr((sender_name, sender))
             msg['To'] = ', '.join(receivers)
 
             alt = MIMEMultipart('alternative')
